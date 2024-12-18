@@ -41,9 +41,27 @@ def undistort_image(img: np.ndarray,
                 b = v - v1
 
                 # [TODO] weighted sum of pixel values in img
+                # Pixel values from the four neighbors
+                I11 = img[v1, u1]
+                I12 = img[v1, u1 + 1]
+                I21 = img[v1 + 1, u1]
+                I22 = img[v1 + 1, u1 + 1]
 
+                # Weighted sum for bilinear interpolation
+                undistorted_img[y, x] = (
+                    (1 - a) * (1 - b) * I11 +
+                    a * (1 - b) * I12 +
+                    (1 - a) * b * I21 +
+                    a * b * I22
+                )
+                
             else:
                 # [TODO] nearest neighbor
+                # Nearest neighbor interpolation
+                u_nn = round(u)
+                v_nn = round(v)
 
+                if 0 <= u_nn < width and 0 <= v_nn < height:
+                    undistorted_img[y, x] = img[v_nn, u_nn]
 
     return undistorted_img
